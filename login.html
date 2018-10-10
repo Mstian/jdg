@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="css/common.css">
+	<style>
+		#wrap{
+			width: 500px;
+			height: 500px;
+			background-color: #ddd;
+			position: absolute;
+			top:0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			margin: auto;
+		}
+		#wrap h4{
+			text-align: center;
+			font-size: 40px;
+			color:yellowgreen;
+			font-weight: bolder;
+		}
+		form p{
+			height: 45px;
+			background-color: #fff;
+			margin:80px 0;
+		}
+		form p span{
+			display: inline-block;
+			height: 45px;
+			width: 100px;
+			line-height: 45px;
+			text-align: center;
+			font-size: 14px;
+			color: #666;
+		}
+		form p input{
+			width: 300px;
+			height: 45px;
+			border-style: none;
+			outline: medium;
+		}
+		 button{
+			width: 400px;
+			height: 45px;
+			background-color: yellowgreen;
+
+		}
+		.btn{
+			text-align: center;
+		}
+		.btn button{
+			color: #fff;
+			font-size: 16px;
+			font-weight: bold;
+			border:none;
+		}
+			#box{
+			color: #fff;
+			font-size: 14px;
+			text-align: center;
+			font-weight: bold;
+			margin-top: 20px;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrap">
+	<h4>登录</h4>
+		<form action="#">
+			<p><span>用户名</span><input id="username" type="text" placeholder="请输入您的用户名"></p>
+			<p><span>密码</span><input id="password" type="password" placeholder="请输入正确的密码"></p>
+		</form>
+		<div class="btn"><button id="login">登录</button></div>
+		<div id="box"></div>
+	</div>
+	<script src="js/tools.js"></script>
+	<script>
+		function ajaxPost(url,data){
+   			 return new Promise(function(succ){
+	        var xhr = new XMLHttpRequest();
+	        xhr.open("POST",url);
+	        xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=utf-8;");
+	        xhr.send(data);
+	        xhr.onload = function(){
+			            succ(xhr.response)
+		        	}
+		    })
+		}
+
+		var user = $('#username');
+
+		var pass = $('#password');
+
+		var login = $('#login');
+
+		var box = $('#box');
+
+		login.onclick = function(){
+			var suser = user.value;
+			var spass = pass.value;
+			ajaxPost("http://localhost/1814/jingdong/php/login.php",`username=${suser}&password=${spass}`)
+			.then(function(res){
+				box.innerHTML = res;
+				if(res == "登陆成功"){
+					location.href = ('http://localhost/1814/jingdong/index.html');
+				}
+			})
+
+			removeCookie('username','/');
+			removeCookie('password','/');
+
+			setCookie('username',suser,{
+				path:'/',
+				expires:15
+			});
+			setCookie('password',spass,{
+				path:'/',
+				expires:15
+			});
+		}
+
+			if(getCookie('username') && getCookie('password')){
+				user.value = getCookie('username');
+				pass.value = getCookie('password')
+			}
+
+
+
+
+
+	</script>
+</body>
+</html>
